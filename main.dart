@@ -29,8 +29,7 @@ print("Choice: $choice");
 
 switch (choice) {
 
-  case "0":
-  print("SEARCH STUDENT");
+  case "0": searchStudent();
   break;
 
   case "1": addStudent();
@@ -54,6 +53,9 @@ switch (choice) {
   case "7": displayStudentWithLowestGrade();
   break;
 
+  case "8": print("EXITING PROGRAM");
+  break;
+
   default:
   print("INVALID INPUT");
 }
@@ -62,6 +64,29 @@ switch (choice) {
 } while (choice != "8");
 }
 
+void searchStudent() {
+  bool found = false;
+
+  stdout.write("Enter your name: ");
+  String? studentName = stdin.readLineSync();
+
+  for (var student in students) {
+    if (student['name'] == studentName) {
+      found = true;
+      print("Student Information:");
+      print("Name: ${student['name']}");
+      print("Age: ${student['age']}");
+      print("Course: ${student['course']}");
+      print("GWA: ${student['gwa']}");
+      print("Status: ${student['status']}");
+      return;
+    }
+  }
+
+  if (!found) {
+    print("Student not found.");
+  }
+}
 
 void addStudent(){
 stdout.write("Enter your name: ");
