@@ -5,6 +5,7 @@ void main(){
 
 String? choice;
 do {
+print("");
 print("=====================================");
 print("     STUDENT INFORMATION SYSTEM      ");
 print("=====================================");
@@ -73,7 +74,7 @@ void searchStudent() {
   for (var student in students) {
     if (student['name'] == studentName) {
       found = true;
-      print("Student Information:");
+      print("=======Student Information=======");
       print("Name: ${student['name']}");
       print("Age: ${student['age']}");
       print("Course: ${student['course']}");
@@ -84,6 +85,7 @@ void searchStudent() {
   }
 
   if (!found) {
+    print("");
     print("Student not found.");
   }
 }
@@ -124,12 +126,13 @@ students.add({
     "status": status 
 
 });
+print("");
 print("Student added successfully");
 
 }
 
 void viewStudentList(){
-  print("STUDENT LIST");
+  print("=======STUDENT LIST=======");
   if (students.isEmpty) {
       print("No students found.");
       return;
@@ -182,12 +185,14 @@ void updateStudentInfo() {
             student['course'] = course;
             student['gwa'] = gwa;
             student['status'] = status;
-
+            
+            print("");
             print("Student information updated successfully.");
             return;
           }
         }
         if (!found) {
+        print("");
         print("Student not found.");
     }
 }
@@ -204,18 +209,21 @@ void deleteStudentInfo() {
     if (student['name'] == studentName) {
       found = true;
       students.remove(student);
+      print("");
       print("Student deleted successfully.");
       return;
     }
   }
 
   if (!found) {
+    print("");
     print("Student not found.");
   }
 }
 
 void computeClassAverage () {
   if (students.isEmpty) {
+    print("");
     print("No students found.");
   }
   else {
@@ -227,7 +235,7 @@ void computeClassAverage () {
       
       averageGWA = totalGWA / students.length;
     }
-
+    
     print("Class Average GWA: $averageGWA");
   }
 
@@ -235,6 +243,7 @@ void computeClassAverage () {
 
 void displayStudentWithHighestGrade() {
   if (students.isEmpty) {
+    print("");
     print("No students found.");
   } else {
     var highestGWAStudent = students[0];
@@ -245,7 +254,7 @@ void displayStudentWithHighestGrade() {
       }
     }
 
-    print("Student with Highest Grade:");
+    print("======Student with Highest Grade========");
     print("Name: ${highestGWAStudent['name']}");
     print("Age: ${highestGWAStudent['age']}");
     print("Course: ${highestGWAStudent['course']}");
@@ -256,6 +265,7 @@ void displayStudentWithHighestGrade() {
 
 void displayStudentWithLowestGrade() {
   if (students.isEmpty) {
+    print("");
     print("No students found.");
   } else {
     var lowestGWAStudent = students[0];
@@ -266,7 +276,7 @@ void displayStudentWithLowestGrade() {
       }
     }
 
-    print("Student with Lowest Grade:");
+    print("=======Student with Lowest Grade======");
     print("Name: ${lowestGWAStudent['name']}");
     print("Age: ${lowestGWAStudent['age']}");
     print("Course: ${lowestGWAStudent['course']}");
