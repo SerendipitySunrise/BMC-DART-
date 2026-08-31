@@ -1,0 +1,384 @@
+import 'dart:io';
+
+class Student {
+  String name;
+  int age;
+  String course;
+  double gwa;
+  String status;
+
+  Student({
+    required this.name,
+    required this.age,
+    required this.course,
+    required this.gwa,
+  }) : status = _calculateStatus(gwa); 
+
+  static String _calculateStatus(double gwa) {
+    if (gwa <= 1.75) {
+      return "Excellent";
+    } else if (gwa <= 2.75) {
+      return "Very Good";
+    } else if (gwa == 3.0) {
+      return "Passed";
+    } else if (gwa == 5.0) {
+      return "Probation";
+    } else {
+      return "Invalid Grade";
+    }
+  }
+
+  void updateInfo({
+    int? age,
+    String? course,
+    double? gwa,
+  }) {
+    if (age != null) this.age = age;
+    if (course != null) this.course = course;
+    if (gwa != null) {
+      this.gwa = gwa;
+      this.status = _calculateStatus(gwa); 
+    }
+  }
+
+  void displayInfo() {
+    print("=======Student Information=======");
+    print("Name: $name");
+    print("Age: $age");
+    print("Course: $course");
+    print("GWA: $gwa");
+    print("Status: $status");
+  }
+
+  @override
+  String toString() {
+    return "Name: $name, Age: $age, Course: $course, GWA: $gwa, Status: $status";
+  }
+}
+
+class StudentManager {
+  List<Student> _students = [];
+
+  int get studentCount => _students.length;
+
+  bool get isEmpty => _students.isEmpty;
+
+  void addStudent(Student student) {
+    _students.add(student);
+    print("");
+    print("Student added successfully");
+  }
+
+  Student? searchStudent(String name) {
+    try {
+      return _students.firstWhere(
+        (student) => student.name.toLowerCase() == name.toLowerCase(),
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  List<Student> getAllStudents() {
+    return List.unmodifiable(_students); 
+  }
+
+  bool updateStudent(String name, {int? age, String? course, double? gwa}) {
+    Student? student = searchStudent(name);
+    if (student != null) {
+      student.updateInfo(age: age, course: course, gwa: gwa);
+      return true;
+    }
+    return false;
+  }
+
+  bool deleteStudent(String name) {
+    Student? student = searchStudent(name);
+    if (student != null) {
+      _students.remove(student);
+      return true;
+    }
+    return false;
+  }
+
+  double computeClassAverage() {
+    if (_students.isEmpty) return 0.0;
+
+    double totalGWA = 0;
+    for (var student in _students) {
+      totalGWA += student.gwa;
+    }
+    return totalGWA / _students.length;
+  }
+
+  Student? getStudentWithHighestGrade() {
+    if (_students.isEmpty) return null;
+
+    return _students.reduce(
+      (current, next) => current.gwa < next.gwa ? current : next,
+    );
+  }
+
+  Student? getStudentWithLowestGrade() {
+    if (_students.isEmpty) return null;
+
+    return _students.reduce(
+      (current, next) => current.gwa > next.gwa ? current : next,
+    );
+  }
+
+  void displayStudentList() {
+    print("=======STUDENT LIST=======");
+    if (_students.isEmpty) {
+      print("No students found.");
+      return;
+    }
+
+    print("List of Students:");
+    for (var student in _students) {
+      print("Name: ${student.name}");
+    }
+  }
+}
+
+class StudentUI {
+  final StudentManager manager = StudentManager();
+
+  void showMenu() {
+    print("");
+    print("=====================================");
+    print("     STUDENT INFORMATION SYSTEM      ");
+    print("=====================================");
+    print("0. SEARCH STUDENT");
+    print("1. ADD STUDENT");
+    print("2. VIEW STUDENT LIST");
+    print("3. UPDATE STUDENT INFO");
+    print("4. DELETE STUDENT INFO");
+    print("5. COMPUTE CLASS AVERAGE");
+    print("6. DISPLAY STUDENT WITH HIGHEST GRADE");
+    print("7. DISPLAY STUDENT WITH LOWEST GRADE");
+    print("8. EXIT");
+    print("");
+  }
+
+  String? getUserChoice() {
+    stdout.write("Enter your number choice: ");
+    return stdin.readLineSync();
+  }
+
+  void handleChoice(String choice) {
+    switch (choice) {
+      case "0":
+        searchStudent();
+        break;
+      case "1":
+        addStudent();
+        break;
+      case "2":
+        viewStudentList();
+        break;
+      case "3":
+        updateStudentInfo();
+        break;
+      case "4":
+        deleteStudentInfo();
+        break;
+      case "5":
+        computeClassAverage();
+        break;
+      case "6":
+        displayStudentWithHighestGrade();
+        break;
+      case "7":
+        displayStudentWithLowestGrade();
+        break;
+      case "8":
+        print("EXITING PROGRAM");
+        break;
+      default:
+        print("INVALID INPUT");
+    }
+  }
+
+  void searchStudent() {
+    stdout.write("Enter student name: ");
+    String? name = stdin.readLineSync();
+
+    if (name == null || name.isEmpty) {
+      print("Invalid name.");
+      return;
+    }
+
+    Student? student = manager.searchStudent(name);
+    if (student != null) {
+      student.displayInfo();
+    } else {
+      print("");
+      print("Student not found.");
+    }
+  }
+
+  void addStudent() {
+    try {
+      stdout.write("Enter your name: ");
+      String? name = stdin.readLineSync();
+      if (name == null || name.isEmpty) {
+        print("Invalid name.");
+        return;
+      }
+
+      stdout.write("Enter your age: ");
+      int age = int.parse(stdin.readLineSync()!);
+
+      stdout.write("Enter your Course: ");
+      String? course = stdin.readLineSync();
+      if (course == null || course.isEmpty) {
+        print("Invalid course.");
+        return;
+      }
+
+      stdout.write("Enter your GWA: ");
+      double gwa = double.parse(stdin.readLineSync()!);
+
+      Student student = Student(
+        name: name,
+        age: age,
+        course: course,
+        gwa: gwa,
+      );
+
+      manager.addStudent(student);
+    } catch (e) {
+      print("Invalid input. Please try again.");
+    }
+  }
+
+  void viewStudentList() {
+    manager.displayStudentList();
+  }
+
+  void updateStudentInfo() {
+    stdout.write("Enter student name: ");
+    String? name = stdin.readLineSync();
+
+    if (name == null || name.isEmpty) {
+      print("Invalid name.");
+      return;
+    }
+
+    Student? existingStudent = manager.searchStudent(name);
+    if (existingStudent == null) {
+      print("");
+      print("Student not found.");
+      return;
+    }
+
+    try {
+      print("Leave blank to keep current value");
+      print("Current age: ${existingStudent.age}");
+
+      stdout.write("Enter new age: ");
+      String? ageInput = stdin.readLineSync();
+      int? age = ageInput!.isEmpty ? null : int.parse(ageInput);
+
+      print("Current course: ${existingStudent.course}");
+      stdout.write("Enter new course: ");
+      String? courseInput = stdin.readLineSync();
+      String? course = courseInput!.isEmpty ? null : courseInput;
+
+      print("Current GWA: ${existingStudent.gwa}");
+      stdout.write("Enter new GWA: ");
+      String? gwaInput = stdin.readLineSync();
+      double? gwa = gwaInput!.isEmpty ? null : double.parse(gwaInput);
+
+      bool updated = manager.updateStudent(
+        name,
+        age: age,
+        course: course,
+        gwa: gwa,
+      );
+
+      if (updated) {
+        print("");
+        print("Student information updated successfully.");
+      }
+    } catch (e) {
+      print("Invalid input. Update cancelled.");
+    }
+  }
+
+  void deleteStudentInfo() {
+    stdout.write("Enter student name: ");
+    String? name = stdin.readLineSync();
+
+    if (name == null || name.isEmpty) {
+      print("Invalid name.");
+      return;
+    }
+
+    bool deleted = manager.deleteStudent(name);
+    if (deleted) {
+      print("");
+      print("Student deleted successfully.");
+    } else {
+      print("");
+      print("Student not found.");
+    }
+  }
+
+  void computeClassAverage() {
+    if (manager.isEmpty) {
+      print("");
+      print("No students found.");
+      return;
+    }
+
+    double average = manager.computeClassAverage();
+    print("Class Average GWA: $average");
+  }
+
+  void displayStudentWithHighestGrade() {
+    if (manager.isEmpty) {
+      print("");
+      print("No students found.");
+      return;
+    }
+
+    Student? highest = manager.getStudentWithHighestGrade();
+    if (highest != null) {
+      print("======Student with Highest Grade========");
+      highest.displayInfo();
+    }
+  }
+
+  void displayStudentWithLowestGrade() {
+    if (manager.isEmpty) {
+      print("");
+      print("No students found.");
+      return;
+    }
+
+    Student? lowest = manager.getStudentWithLowestGrade();
+    if (lowest != null) {
+      print("=======Student with Lowest Grade======");
+      lowest.displayInfo();
+    }
+  }
+
+  // Run the application
+  void run() {
+    String? choice;
+    do {
+      showMenu();
+      choice = getUserChoice();
+      print("Choice: $choice");
+      handleChoice(choice!);
+    } while (choice != "8");
+  }
+}
+
+// 4. Main function
+void main() {
+  StudentUI app = StudentUI();
+  app.run();
+}
