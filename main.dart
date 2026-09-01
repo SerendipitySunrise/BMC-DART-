@@ -1,6 +1,7 @@
 import 'dart:io';
 
 List<Map<String,dynamic>> Students = [];
+next_id = 1;
 
 void main(){
     while(true){
@@ -78,8 +79,19 @@ void viewStudents(){
 
 void updateStudent(){
     print("======Update Student Info======");
+
+    search student();
 }
 
 void deleteStudent(){
     print("======Delete Student======");
 }
+
+void searchStudent
+
+//ASSIGNMENT
+//update
+//delete
+//next_id=1
+//searching student by ID
+//DRY - DONT REPEAT YOURSELF
