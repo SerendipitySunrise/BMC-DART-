@@ -71,6 +71,7 @@ void viewStudents(){
         print("Name: ${student["Name"]}");
         print("Course: ${student["Course"]}");
         print("Year Level: ${student["Year Level"]}\n");
+        print("=====================\n")
 
     }
 }
