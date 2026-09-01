@@ -1,291 +1,84 @@
 import 'dart:io';
 
-List<Map<String,dynamic>> students =[];
+List<Map<String,dynamic>> Students = [];
+
 void main(){
+    while(true){
+        print("=================================");
+        print("    Student Information System   ");
+        print("=================================");
+        print("1. Add Student");
+        print("2. View Students");
+        print("3. Update Student Info");
+        print("4. Delete Student");
+        print("5. Exit");
+        print("=================================");
 
-String? choice;
-do {
-print("");
-print("=====================================");
-print("     STUDENT INFORMATION SYSTEM      ");
-print("=====================================");
+        stdout.write("Please enter a number:  ");
+        int? choice = int.parse(stdin.readLineSync()!);
 
-print("0. SEARCH STUDENT");
-print("1. ADD STUDENT");
-print("2. VIEW STUDENT LIST");
-print("3. UPDATE STUDENT INFO");
-print("4. DELETE STUDENT INFO");
-print("5. COMPUTE CLASS AVERAGE");
-print("6. DISPLAY STUDENT WITH HIGHEST GRADE");
-print("7. DISPLAY STUDENT WITH LOWEST GRADE");
-print("8. EXIT");
+        switch(choice){
+            case 1: addStudent();
+            break;
 
-print("");
+            case 2: viewStudents();
+            break;
 
+            case 3: updateStudent();
+            break;
 
-stdout.write("Enter your number choice: ");
-choice = stdin.readLineSync();
-print("Choice: $choice");
+            case 4: deleteStudent();
+            break;
 
-
-switch (choice) {
-
-  case "0": searchStudent();
-  break;
-
-  case "1": addStudent();
-  break;
-
-  case "2": viewStudentList();
-  break;
-
-  case "3": updateStudentInfo();
-  break;
-
-  case "4": deleteStudentInfo();
-  break;
-
-  case "5": computeClassAverage();
-  break;
-
-  case "6": displayStudentWithHighestGrade();
-  break;
-
-  case "7": displayStudentWithLowestGrade();
-  break;
-
-  case "8": print("EXITING PROGRAM");
-  break;
-
-  default:
-  print("INVALID INPUT");
-}
-
-
-} while (choice != "8");
-}
-
-void searchStudent() {
-  bool found = false;
-
-  stdout.write("Enter your name: ");
-  String? studentName = stdin.readLineSync();
-
-  for (var student in students) {
-    if (student['name'] == studentName) {
-      found = true;
-      print("=======Student Information=======");
-      print("Name: ${student['name']}");
-      print("Age: ${student['age']}");
-      print("Course: ${student['course']}");
-      print("GWA: ${student['gwa']}");
-      print("Status: ${student['status']}");
-      return;
+            case 5: 
+            print("Exiting Program");
+            return;
+        }
     }
-  }
 
-  if (!found) {
-    print("");
-    print("Student not found.");
-  }
 }
 
 void addStudent(){
-stdout.write("Enter your name: ");
-String? name = stdin.readLineSync();
+    print("======Add Student======");
+    stdout.write("Please enter your Name:  ");
+    String name = stdin.readLineSync()!;
 
-stdout.write("Enter your age: ");
-int? age = int.parse(stdin.readLineSync()!);
+    stdout.write("Please enter your Course:  ");
+    String course = stdin.readLineSync()!;
 
-stdout.write("Enter your Course: ");
-String? course = stdin.readLineSync();
+    stdout.write("Please enter your Year Level:  ");
+    String yearLevel = stdin.readLineSync()!;
 
-stdout.write("Enter your GWA: ");
-double? gwa = double.parse(stdin.readLineSync()!);
-
-var status = "";
-
-
-if (gwa <=1.75) {
-status = "Excellent";
-} else if (gwa <=2.75) {
-status = "Very Good";
-} else if (gwa == 3.0) {
-status = "Passed";
-}else if (gwa == 5.0) {
-status = "Probation";
-} else {
-status = "Invalid Grade";
-}
-
-students.add({
-    "name": name,
-    "age": age,
-    "course": course,
-    "gwa": gwa,
-    "status": status 
-
-});
-print("");
-print("Student added successfully");
-
-}
-
-void viewStudentList(){
-  print("=======STUDENT LIST=======");
-  if (students.isEmpty) {
-      print("No students found.");
-      return;
-  } else {
-      print("List of Students:");
-    }
-
-  for (var student in students) {
-    print("Name: ${student['name']}");
-  }
-}
-
-void updateStudentInfo() {
-  bool found =  false;
-
-  stdout.write("Enter your name: ");
-  String? studentName = stdin.readLineSync();
-
-   for (var student in students) {
-  
-
-    if (student['name'] == studentName) {
-      found = true;
-
-      stdout.write("Enter your age: ");
-      int? age = int.parse(stdin.readLineSync()!);
-
-      stdout.write("Enter your Course: ");
-      String? course = stdin.readLineSync();
-
-      stdout.write("Enter your GWA: ");
-      double? gwa = double.parse(stdin.readLineSync()!);
-
-      var status = "";
-
-
-      if (gwa <=1.75) {
-      status = "Excellent";
-      } else if (gwa <=2.75) {
-      status = "Very Good";
-      } else if (gwa == 3.0) {
-      status = "Passed";
-      }else if (gwa == 5.0) {
-      status = "Probation";
-      } else {
-      status = "Invalid Grade";
-      }
-
-            student['age'] = age;
-            student['course'] = course;
-            student['gwa'] = gwa;
-            student['status'] = status;
-            
-            print("");
-            print("Student information updated successfully.");
-            return;
-          }
-        }
-        if (!found) {
-        print("");
-        print("Student not found.");
-    }
-}
-
-void deleteStudentInfo() {
-  bool found =  false;
-
-  stdout.write("Enter your name: ");
-  String? studentName = stdin.readLineSync();
-
-   for (var student in students) {
-  
-
-    if (student['name'] == studentName) {
-      found = true;
-      students.remove(student);
-      print("");
-      print("Student deleted successfully.");
-      return;
-    }
-  }
-
-  if (!found) {
-    print("");
-    print("Student not found.");
-  }
-}
-
-void computeClassAverage () {
-  if (students.isEmpty) {
-    print("");
-    print("No students found.");
-  }
-  else {
-    double totalGWA = 0;
-    double averageGWA = 0;
-
-    for (var student in students) {
-      totalGWA += student['gwa'];
-      
-      averageGWA = totalGWA / students.length;
-    }
+    Students.add({
+        "Name": name,
+        "Course": course,
+        "Year Level": yearLevel
+    });
+    print("Student Added Successfully ");
     
-    print("Class Average GWA: $averageGWA");
-  }
-
 }
 
-void displayStudentWithHighestGrade() {
-  if (students.isEmpty) {
-    print("");
-    print("No students found.");
-  } else {
-    var highestGWAStudent = students[0];
+void viewStudents(){
+    print("======View Students======");
 
-    for (var student in students) {
-      if (student['gwa'] < highestGWAStudent['gwa']) {
-        highestGWAStudent = student;
-      }
+    if (Students.isEmpty){
+        print("No records found");
     }
 
-    print("======Student with Highest Grade========");
-    print("Name: ${highestGWAStudent['name']}");
-    print("Age: ${highestGWAStudent['age']}");
-    print("Course: ${highestGWAStudent['course']}");
-    print("GWA: ${highestGWAStudent['gwa']}");
-    print("Status: ${highestGWAStudent['status']}");
-  }
-}
+    for (int i = 0; i < Students.length; i++){
+        var student = Students[i];
 
-void displayStudentWithLowestGrade() {
-  if (students.isEmpty) {
-    print("");
-    print("No students found.");
-  } else {
-    var lowestGWAStudent = students[0];
+        print("Name: ${student["Name"]}");
+        print("Course: ${student["Course"]}");
+        print("Year Level: ${student["Year Level"]}\n");
 
-    for (var student in students) {
-      if (student['gwa'] > lowestGWAStudent['gwa']) {
-        lowestGWAStudent = student;
-      }
     }
-
-    print("=======Student with Lowest Grade======");
-    print("Name: ${lowestGWAStudent['name']}");
-    print("Age: ${lowestGWAStudent['age']}");
-    print("Course: ${lowestGWAStudent['course']}");
-    print("GWA: ${lowestGWAStudent['gwa']}");
-    print("Status: ${lowestGWAStudent['status']}");
-  }
 }
 
-// DO-WHILE
-// LIST, MAP
-// IF, switch
-// FOR LOOP
+void updateStudent(){
+    print("======Update Student Info======");
+}
+
+void deleteStudent(){
+    print("======Delete Student======");
+}
